@@ -1,6 +1,57 @@
 This is Python version 3.10.14
 ==============================
 
+- How to build:
+
+Build commands:
+
+Windows:
+
+    Clone the repo:
+    git clone --branch 3.10 --recursive https://github.com/Randy420Marsh/cpython.git Python-3.10
+
+cd Python-3.10
+
+PCbuild\build.bat -e -r -p x64
+
+Build embeddable package:
+
+Tools\msi\buildrelease.bat -x64 --skip-nuget --test testout
+
+The built python installer will be in \builds\Python-3.10\PCbuild\amd64\en-us
+as a python-3.10.14-amd64.exe along with other .exe packages and the python-3.10.14-embed-amd64.zip
+
+##################################################################################
+
+Linux:
+
+sudo apt install zlib1g-dev libssl-dev
+
+    Edit apt sources: uncomment deb-src lines
+
+sudo nano /etc/apt/sources.list
+
+    Install dependencies:
+    sudo apt-get build-dep python3 ; sudo apt-get install build-essential gdb lcov pkg-config
+    libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev
+    libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev
+    lzma lzma-dev tk-dev uuid-dev zlib1g-dev libmpdec-dev
+
+    Clone the repo:
+    git clone --branch 3.10 --recursive https://github.com/Randy420Marsh/cpython.git Python-3.10
+
+    Configure and build:
+
+cd Python-3.10
+
+configure options:
+./configure --prefix=/usr/local --enable-optimizations --with-lto
+
+make -j$(nproc)
+
+Done
+##################################################################
+
 .. image:: https://travis-ci.com/python/cpython.svg?branch=master
    :alt: CPython build status on Travis CI
    :target: https://travis-ci.com/python/cpython
