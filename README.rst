@@ -1,7 +1,7 @@
 This is Python version 3.10.14
 ==============================
 
-- How to build:
+How to build:
 ---------------
 
 Build commands:
