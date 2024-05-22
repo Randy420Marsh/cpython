@@ -2,66 +2,68 @@ This is Python version 3.10.14
 ==============================
 
 How to build:
----------------
-
-Build commands:
+------------------
 
 Windows:
+------------------
 
-    Clone the repo:
+Clone the repo::
+
     git clone --branch 3.10 --recursive https://github.com/Randy420Marsh/cpython.git Python-3.10
+    cd Python-3.10
+    PCbuild\build.bat -e -r -p x64
 
-cd Python-3.10
+Build embeddable package::
 
-PCbuild\build.bat -e -r -p x64
+    Tools\msi\buildrelease.bat -x64 --skip-nuget --test testout
 
-Build embeddable package:
-
-Tools\msi\buildrelease.bat -x64 --skip-nuget --test testout
-
-The built python installer will be in \builds\Python-3.10\PCbuild\amd64\en-us
-as a python-3.10.14-amd64.exe along with other .exe packages and the python-3.10.14-embed-amd64.zip
+``The built python installer will be in \builds\Python-3.10\PCbuild\amd64\en-us as a python-3.10.14-amd64.exe along with other .exe packages and the python-3.10.14-embed-amd64.zip``
 
 End
+------------------
 
 ##################################################################################
 
 Linux:
+------------------
 
-sudo apt install zlib1g-dev libssl-dev
+Edit apt sources and uncomment deb-src lines::
 
-    Edit apt sources: uncomment deb-src lines
+    sudo nano /etc/apt/sources.list
 
-sudo nano /etc/apt/sources.list
+Install dependencies::
 
-    Install dependencies:
-    sudo apt-get build-dep python3 ; sudo apt-get install build-essential gdb lcov pkg-config
-    libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev
-    libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev
-    lzma lzma-dev tk-dev uuid-dev zlib1g-dev libmpdec-dev
+    sudo apt-get build-dep python3 ; sudo apt-get install build-essential gdb lcov pkg-config \
+    libbz2-dev libffi-dev libgdbm-dev libgdbm-compat-dev liblzma-dev \
+    libncurses5-dev libreadline6-dev libsqlite3-dev libssl-dev \
+    lzma lzma-dev tk-dev uuid-dev zlib1g-dev libmpdec-dev libssl-dev
 
-    Clone the repo:
+Clone the repo::
+
     git clone --branch 3.10 --recursive https://github.com/Randy420Marsh/cpython.git Python-3.10
 
-    Configure and build:
+Configure and build::
 
-cd Python-3.10
+    cd Python-3.10
 
-configure options:
-./configure --prefix=/usr/local --enable-optimizations --with-lto
+    configure options::
 
-make -j$(nproc)
+    ./configure --prefix=/usr/local --enable-optimizations --with-lto
 
-make altinstall
+    make -j$(nproc)
 
-$which python3.10
-/usr/local/bin/python3.10
+    make altinstall
 
-$python3.10 --version
-Python 3.10.14+
+    $which python3.10
+
+    python3.10 --version
+
+``/usr/local/bin/python3.10``
+
+``Python 3.10.14+``
 
 End
-
+------------------
 ##################################################################################
 
 .. image:: https://travis-ci.com/python/cpython.svg?branch=master
