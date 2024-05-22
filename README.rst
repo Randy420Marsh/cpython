@@ -2,6 +2,7 @@ This is Python version 3.10.14
 ==============================
 
 - How to build:
+---------------
 
 Build commands:
 
@@ -50,7 +51,8 @@ configure options:
 make -j$(nproc)
 
 Done
-##################################################################
+
+##################################################################################
 
 .. image:: https://travis-ci.com/python/cpython.svg?branch=master
    :alt: CPython build status on Travis CI
