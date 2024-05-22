@@ -22,6 +22,8 @@ Tools\msi\buildrelease.bat -x64 --skip-nuget --test testout
 The built python installer will be in \builds\Python-3.10\PCbuild\amd64\en-us
 as a python-3.10.14-amd64.exe along with other .exe packages and the python-3.10.14-embed-amd64.zip
 
+End
+
 ##################################################################################
 
 Linux:
@@ -50,7 +52,15 @@ configure options:
 
 make -j$(nproc)
 
-Done
+make altinstall
+
+$which python3.10
+/usr/local/bin/python3.10
+
+$python3.10 --version
+Python 3.10.14+
+
+End
 
 ##################################################################################
 
