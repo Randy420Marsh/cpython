@@ -1,0 +1,8 @@
+Package: Python 3.10.14+
+Version: 3.10.14+
+Section: base
+Priority: optional
+Maintainer: Randy420Marsh
+Architecture: amd64
+Description: Python 3.10.14+ with all modules enabled.
+
