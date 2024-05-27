@@ -54,9 +54,9 @@ Configure and build::
 
     make altinstall
 
-    $which python3.10
+    which python3.10
 
-    python3.10 --version
+    $python3.10 --version
 
 ``/usr/local/bin/python3.10``
 
