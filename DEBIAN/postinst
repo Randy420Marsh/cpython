@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sudo make altinstall && \
+echo "/usr/local/bin/python3.10 --version" && \
+/usr/local/bin/python3.10 --version && \
+echo "Python-3.10.14+ is now installed in /usr/local/bin/python3.10"
