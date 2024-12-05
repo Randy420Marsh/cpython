@@ -17,7 +17,7 @@ Build embeddable package::
 
     Tools\msi\buildrelease.bat -x64 --skip-nuget --test testout
 
-``The built python installer will be in \builds\Python-3.10\PCbuild\amd64\en-us as a python-3.10.14-amd64.exe along with other .exe packages and the python-3.10.14-embed-amd64.zip``
+``The built python installer will be in \builds\Python-3.10\PCbuild\amd64\en-us as a python-3.10.16+-amd64.exe along with other .exe packages and the python-3.10.16+-embed-amd64.zip``
 
 End
 ------------------
@@ -60,7 +60,7 @@ Configure and build::
 
 ``/usr/local/bin/python3.10``
 
-``Python 3.10.14+``
+``Python 3.10.16+``
 
 End
 ------------------
