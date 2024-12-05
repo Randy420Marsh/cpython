@@ -40,11 +40,11 @@ Install dependencies::
 
 Clone the repo::
 
-    git clone --branch 3.10 --recursive https://github.com/Randy420Marsh/cpython.git Python-3.10.14+
+    git clone --branch 3.10 --recursive https://github.com/Randy420Marsh/cpython.git Python-3.10.16+
 
 Configure and build::
 
-    cd Python-3.10.14+
+    cd Python-3.10.16+
 
     configure options::
 
