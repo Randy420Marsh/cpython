@@ -1,0 +1,44 @@
+name: Build CPython 3.10 for Windows
+
+on:
+  # This allows you to manually trigger the workflow from the GitHub Actions tab
+  workflow_dispatch:
+  # You can also trigger it on a push to a specific branch in your fork
+  # push:
+  #   branches: [ main ] 
+
+jobs:
+  build_windows_310:
+    # Use the Windows runner
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout CPython Source (3.10 branch)
+      uses: actions/checkout@v4
+      with:
+        # Check out the CPython repository directly. Change 'python/cpython' 
+        # to your forked repository name (e.g., 'YOUR_USERNAME/cpython')
+        repository: Randy420Marsh/cpython 
+        ref: 3.10 # Target the 3.10 branch
+        
+    - name: Build Python 3.10 (64-bit Release)
+      # The CPython build system on Windows uses a PCbuild directory and batch files.
+      # The 'build.bat' script handles most of the complex setup.
+      # Arguments: -e (Exit on failure), -r (Release build), -x64 (64-bit)
+      run: |
+        PCbuild\build.bat -e -r -x64
+      # Note: This step can take 15-30 minutes or more depending on the runner.
+      
+    - name: Zip the Built Directory
+      # Zip the resulting build directory so it can be uploaded as a single artifact
+      # The built executable and libraries are in PCbuild\amd64\
+      run: |
+        Compress-Archive -Path PCbuild\amd64\* -DestinationPath cpython-3.10-windows-x64.zip
+      shell: powershell
+      
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cpython-3.10-windows-x64-build
+        path: cpython-3.10-windows-x64.zip
+        retention-days: 7 # The artifact will be available for 7 days
