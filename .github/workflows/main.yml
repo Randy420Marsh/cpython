@@ -1,0 +1,37 @@
+name: Build CPython 3.12 for Windows
+
+on:
+  workflow_dispatch:
+  # Uncomment to build automatically on push to main
+  # push:
+  #   branches: [ main ] 
+
+jobs:
+  build:
+    runs-on: windows-latest 
+
+    steps:
+      - name: Checkout CPython Source (3.12 branch)
+        uses: actions/checkout@v4
+        with:
+          repository: Randy420Marsh/cpython
+          ref: 3.12
+
+      - name: Set up Host Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Build Python 3.12 (64-bit Release)
+        run: PCbuild\build.bat -e -r -x64
+
+      - name: Zip the Built Directory
+        run: Compress-Archive -Path PCbuild\amd64\* -DestinationPath cpython-3.12-windows-x64.zip
+        shell: powershell
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpython-3.12-windows-x64-build
+          path: cpython-3.12-windows-x64.zip
+          retention-days: 7
