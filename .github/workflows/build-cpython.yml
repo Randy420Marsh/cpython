@@ -8,14 +8,18 @@ on:
   #   branches: [ main ] 
 
 jobs:
-  build_windows_310:
+  build:
+  strategy:
+      matrix:
+      os: [windows-latest] 
     # Use the Windows runner
-    runs-on: windows-latest
+    python-version: [3.10]
+    runs-on: ${{ matrix.os }} 
 
     steps:
-    - name: Checkout CPython Source (3.10 branch)
-      uses: actions/checkout@v4
-      with:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      python-version: '3.12' 
         # Check out the CPython repository directly. Change 'python/cpython' 
         # to your forked repository name (e.g., 'YOUR_USERNAME/cpython')
         repository: Randy420Marsh/cpython 
