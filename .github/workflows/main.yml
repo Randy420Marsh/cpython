@@ -1,37 +1,60 @@
-name: Build CPython 3.12 for Windows
+name: Build CPython for Windows
 
 on:
+  # Allows manual triggering from the GitHub UI
   workflow_dispatch:
   # Uncomment to build automatically on push to main
   # push:
-  #   branches: [ main ] 
+  #   branches: [ main ]
 
 jobs:
   build:
-    runs-on: windows-latest 
-
+    # Use a recent Windows version for better performance/tools
+    runs-on: windows-2022 
+    
     steps:
-      - name: Checkout CPython Source (3.12 branch)
+      - name: Checkout CPython Source
         uses: actions/checkout@v4
         with:
+          # Ensure you are checking out the correct repository and branch
           repository: Randy420Marsh/cpython
-          ref: 3.12
+          # Assuming you want to build the 'main' branch or default branch
+          # ref: main 
 
       - name: Set up Host Python
-        uses: actions/setup-python@v4
+        # Set up a specific, stable version for the host Python required by the build system
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11' # CPython's build scripts usually need a recent Python
+          # Cache this Python setup
+          cache: 'pip' 
 
-      - name: Build Python 3.12 (64-bit Release)
+      - name: Add MSBuild to PATH
+        # CPython's PCbuild\build.bat relies on MSBuild being accessible
+        uses: microsoft/setup-msbuild@v2 
+
+      - name: Build Python (64-bit Release)
+        # Ensure 'PCbuild\build.bat' is executable and runs correctly
+        # The '-e' flag cleans the environment before building, which is good practice
+        # The flags -e -r -x64 mean: rebuild everything, Release configuration, 64-bit target
         run: PCbuild\build.bat -e -r -x64
+        # Add a timeout in case the build hangs
+        timeout-minutes: 45 
 
       - name: Zip the Built Directory
-        run: Compress-Archive -Path PCbuild\amd64\* -DestinationPath cpython-3.12-windows-x64.zip
+        # Use an explicit shell for clarity, though powershell is the default on windows-latest
+        # Ensure you are zipping the correct compiled artifacts (the entire build output, not just .exe)
+        run: |
+          # The resulting files are usually in PCbuild\amd64 or PCbuild\win32 depending on the build
+          # This command archives the entire PCbuild\amd64 directory contents
+          Compress-Archive -Path PCbuild\amd64\* -DestinationPath cpython-windows-x64.zip
+          # Check the archive contents and size for debugging
+          Get-Item cpython-windows-x64.zip | Select-Object Name, Length
         shell: powershell
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cpython-3.12-windows-x64-build
-          path: cpython-3.12-windows-x64.zip
+          name: cpython-windows-x64-build
+          path: cpython-windows-x64.zip
           retention-days: 7
