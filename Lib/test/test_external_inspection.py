@@ -521,6 +521,44 @@ class TestGetStackTrace(RemoteInspectionTestBase):
         sys.platform == "linux" and not PROCESS_VM_READV_SUPPORTED,
         "Test only runs on Linux with process_vm_readv support",
     )
+    def test_self_trace_after_ctypes_import(self):
+        """Test that RemoteUnwinder works on the same process after _ctypes import.
+
+        When _ctypes is imported, it may call dlopen on the libpython shared
+        library, creating a duplicate mapping in the process address space.
+        The remote debugging code must skip these uninitialized duplicate
+        mappings and find the real PyRuntime. See gh-144563.
+        """
+        # Run the test in a subprocess to avoid side effects
+        script = textwrap.dedent("""\
+            import os
+            import _remote_debugging
+
+            # Should work before _ctypes import
+            unwinder = _remote_debugging.RemoteUnwinder(os.getpid())
+
+            import _ctypes
+
+            # Should still work after _ctypes import (gh-144563)
+            unwinder = _remote_debugging.RemoteUnwinder(os.getpid())
+            """)
+
+        result = subprocess.run(
+            [sys.executable, "-c", script],
+            capture_output=True,
+            text=True,
+            timeout=SHORT_TIMEOUT,
+        )
+        self.assertEqual(
+            result.returncode, 0,
+            f"stdout: {result.stdout}\nstderr: {result.stderr}"
+        )
+
+    @skip_if_not_supported
+    @unittest.skipIf(
+        sys.platform == "linux" and not PROCESS_VM_READV_SUPPORTED,
+        "Test only runs on Linux with process_vm_readv support",
+    )
     def test_async_remote_stack_trace(self):
         port = find_unused_port()
         script = textwrap.dedent(
@@ -1752,7 +1790,12 @@ class TestGetStackTrace(RemoteInspectionTestBase):
                     unwinder_gil = RemoteUnwinder(
                         p.pid, only_active_thread=True
                     )
-                    gil_traces = _get_stack_trace_with_retry(unwinder_gil)
+                    # Use condition to retry until we capture a thread holding the GIL
+                    # (sampling may catch moments with no GIL holder on slow CI)
+                    gil_traces = _get_stack_trace_with_retry(
+                        unwinder_gil,
+                        condition=lambda t: sum(len(i.threads) for i in t) >= 1,
+                    )
 
                     # Count threads
                     total_threads = sum(
