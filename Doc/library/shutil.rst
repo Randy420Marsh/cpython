@@ -669,7 +669,7 @@ provided.  They rely on the :mod:`zipfile` and :mod:`tarfile` modules.
       This function is now made thread-safe during creation of standard
       ``.zip`` and tar archives.
 
-   .. versionchanged:: next
+   .. versionchanged:: 3.15
       Accepts a :term:`path-like object` for *base_name*, *root_dir* and
       *base_dir*.
 
@@ -749,8 +749,8 @@ provided.  They rely on the :mod:`zipfile` and :mod:`tarfile` modules.
 
       Never extract archives from untrusted sources without prior inspection.
       It is possible that files are created outside of the path specified in
-      the *extract_dir* argument, e.g. members that have absolute filenames
-      starting with "/" or filenames with two dots "..".
+      the *extract_dir* argument, for example, members that have absolute filenames
+      or filenames with ".." components.
 
       Since Python 3.14, the defaults for both built-in formats (zip and tar
       files) will prevent the most dangerous of such security issues,
